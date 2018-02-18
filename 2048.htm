@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)http://gabrielecirulli.github.io/2048/ -->
+<html lang="en" manifest="cache.appcache"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>2048</title>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="./2048_files/lib/codemirror.css">
+	<link rel="stylesheet" href="./2048_files/show-hint.css">
+	<script src="./2048_files/lib/codemirror.js"></script>
+	<script src="./2048_files/show-hint.js"></script>
+	<script src="./2048_files/javascript-hint.js"></script>
+	<script src="./2048_files/javascript.js"></script>
+
+
+  <!-- <script type="text/javascript" src="http://balupton.github.com/jquery-syntaxhighlighter/scripts/jquery.syntaxhighlighter.min.js"></script> -->
+  <!-- <script type="text/javascript">$.SyntaxHighlighter.init();</script> -->
+  
+  <link href="./2048_files/main.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="http://gabrielecirulli.github.io/2048/favicon.ico">
+  <link rel="apple-touch-icon" href="http://gabrielecirulli.github.io/2048/meta/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="format-detection" content="telephone=no">
+
+  <meta property="og:title" content="2048 game">
+  <meta property="og:site_name" content="2048 game">
+  <meta property="og:description" content="Join the numbers and get to the 2048 tile! Careful: this game is extremely addictive!">
+  <meta property="og:image" content="http://gabrielecirulli.github.io/2048/meta/og_image.png">
+</head>
+<body data-twttr-rendered="true">
+  <div class="container">
+    <div class="heading">
+      <h1 class="title">Automized 2048            <img src="./2048_files/sts_logo.png" alt="some_text"></h1>
+      <div class="scores-container">
+	    <div class="moves-container">0</div>
+        <div class="score-container">48<div class="score-addition">+48</div></div>
+        <div class="best-container">48</div>
+      </div>
+    </div>
+
+    <div class="above-game">
+      <p class="game-intro">Let my bot join the numbers and get to the <strong>2048 tile!</strong></p>
+	  <a class="run-bot-button" onclick="gameManager.runBotSimulation()">Run bot simulation...</a><br><br><br><br>
+	  <a class="halt-bot-button" onclick="gameManager.stopBotSimulation()">Halt bot!</a><br><br><br>
+      <a class="restart-button">Reset bot 'n' game</a>
+    </div>
+
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+	        <a class="keep-playing-button">Keep going</a>
+          <a class="retry-button">Try again</a>
+          <div class="score-sharing"></div>
+          <div class="mailing-list">
+            <!-- MailChimp Signup Form -->
+            <form action="http://gabrielecirulli.us8.list-manage.com/subscribe/post?u=991201206817cfb4e4247ed6c&id=7928ea817b" method="post" name="mc-embedded-subscribe-form" class="mailing-list-form" target="_blank">
+              <strong>Get email updates from Gabriele</strong>
+
+              <input type="email" value="" name="EMAIL" class="mailing-list-email-field" placeholder="Your email address" spellcheck="false">
+
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -9999px;">
+                <input type="text" name="b_991201206817cfb4e4247ed6c_7928ea817b" value="">
+              </div>
+
+              <input type="submit" value="Go" name="subscribe" class="mailing-list-subscribe-button">
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container"><div class="tile tile-16 tile-position-1-1 tile-new"><div class="tile-inner">16</div></div><div class="tile tile-2 tile-position-1-2 tile-new"><div class="tile-inner">2</div></div><div class="tile tile-2 tile-position-2-1 tile-new"><div class="tile-inner">2</div></div><div class="tile tile-2 tile-position-4-1 tile-new"><div class="tile-inner">2</div></div></div>
+    </div>
+
+	<hr>
+	<p class="bot-code-text">
+      <strong class="important">Your bot code:</strong><br>
+	  <!--
+	  
+atSpeed(100);
+	  
+var gameBoard = getGameBoard();      
+var direction = 0;
+
+
+if(Math.random()*100>50) {
+    direction = 0;
+} else {
+    direction = 1;
+}
+
+
+if(!couldMove(direction)) {
+	for(var it=0;it<4;++it) {
+		direction += it;
+		direction %= 4;
+		if(couldMove(direction)) {
+			it = 4;
+			break;
+		}
+	}
+}
+
+
+move(direction);
+	  
+	  
+	  -->
+	  <pre class="bot-code" style="border: 1px solid darkgray;"><form><textarea id="code" class="bot-code-input-text" name="code">
+
+
+
+
+atSpeed(15);
+var map = getGameBoard();
+
+function getLinearBoard(bd) {
+	var arr = new Array();
+	for(var x=0;x<4;++x) {
+		for(var y=0;y<4;++y) {
+			arr[y*4+x] = bd[x][y];
+		}
+	}
+	return arr;
+}
+
+function evalBoard(bd,dir) {
+	var res = 0;
+	var lb = getLinearBoard(bd);
+	lb.sort(function(a,b){return b-a;});
+	var todobd = new Array();
+	for(var y=0;y<4;++y) {
+		todobd[y] = new Array();
+	}
+	todobd[3][3] = lb[0];
+	todobd[2][3] = lb[1];
+	todobd[1][3] = lb[2];
+	todobd[0][3] = lb[3];
+	todobd[0][2] = lb[4];
+	todobd[1][2] = lb[5];
+	todobd[2][2] = lb[6];
+	todobd[3][2] = lb[7];
+	todobd[3][1] = lb[8];
+	todobd[2][1] = lb[9];
+	todobd[1][1] = lb[10];
+	todobd[0][1] = lb[11];
+	todobd[0][0] = lb[12];
+	todobd[1][0] = lb[13];
+	todobd[2][0] = lb[14];
+	todobd[3][0] = lb[15];
+
+	todobd = ifMoved(todobd, dir);
+
+	//alert(debug(todobd));
+
+	for(var x=0;x<4;++x) {
+		for(var y=0;y<4;++y) {
+			if(bd[x][y]==todobd[x][y]) {
+				res+=100;
+			}
+		}
+	}
+	
+	if(dir==globals.up) {
+		return res-2500;
+	}
+	if(dir==globals.left) {
+		return res-500;
+	}
+
+	return res;
+}
+
+var moves = new Array();
+for(var it=0;it<4;++it) {
+	moves[it]=new Array();
+	moves[it][0] = evalBoard(ifMoved(map, it), it);
+	moves[it][1] = [ it ];
+}
+
+
+moves.sort(function(a,b){return b[0]-a[0];});
+var len = moves.length;
+for(var it=0;it<len;++it) {
+	if(couldMove(map, moves[it][1][0])) {
+		move(moves[it][1][0]);
+		break;
+	}
+}
+
+
+	  </textarea></form></pre>
+	  <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        extraKeys: {"Ctrl-Space": "autocomplete"},
+        mode: {name: "javascript", globalVars: true}
+      });
+    </script>
+	
+    </p>
+	
+    <p class="game-explanation">
+      <strong class="important">HOW TO USE: </strong> Just type <strong>your code</strong> in the window up here and test your 2048 game bots by clicking <strong>Run bot simulation</strong> button! Let the bots championship begin! ;)
+    </p>
+    <hr>
+    <p>
+    <strong class="important">Note:</strong> This site was made by one of the fans of the original 2048 game. Please give all the credit to the game creators, I'm just small code writer, who wanted to test his algorithms...<br>You can find original 2048 game at: <a href="http://git.io/2048">http://git.io/2048.</a> :D
+    </p>
+    <hr>
+    <p>
+    2048 Game was created by <a href="http://gabrielecirulli.com/" target="_blank">Gabriele Cirulli.</a> Based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Asher Vollmer.</a>
+    </p>
+    <div class="sharing">
+      <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" src="./2048_files/tweet_button.1397165098.htm" class="twitter-share-button twitter-tweet-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 110px; height: 20px;"></iframe>
+      <script async="" src="./2048_files/analytics.js"></script><script id="twitter-wjs" src="./2048_files/widgets.js"></script><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      <form class="pp-donate" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="NVNPJLTBZ8AME">
+        <button name="submit"><img src="./2048_files/icon_pp.svg">Donate</button>
+        <img alt="" border="0" src="./2048_files/pixel.gif" width="1" height="1">
+      </form>
+
+      <span class="btc-donate">
+        <a href="bitcoin:1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i">
+          <img src="./2048_files/icon_bitcoin.svg">Donate BTC
+        </a>
+        <span class="address"><code>1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i</code></span>
+      </span>
+
+    </div>
+  </div>
+
+  <script src="./2048_files/bind_polyfill.js"></script>
+  <script src="./2048_files/classlist_polyfill.js"></script>
+  <script src="./2048_files/animframe_polyfill.js"></script>
+  <script src="./2048_files/keyboard_input_manager.js"></script>
+  <script src="./2048_files/html_actuator.js"></script>
+  <script src="./2048_files/grid.js"></script>
+  <script src="./2048_files/tile.js"></script>
+  <script src="./2048_files/local_storage_manager.js"></script>
+  <script src="./2048_files/game_manager.js"></script>
+  <script src="./2048_files/application.js"></script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,"script","//www.google-analytics.com/analytics.js","ga");
+
+    ga("create", "UA-42620757-2", "gabrielecirulli.github.io");
+    ga("send", "pageview");
+  </script>
+
+
+</body></html>
